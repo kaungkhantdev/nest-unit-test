@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDemoDto } from './dto/create-demo.dto';
-import { UpdateDemoDto } from './dto/update-demo.dto';
+import {
+  Create,
+  IDemoService,
+  Update,
+} from '@common/interfaces/services/demo-service.interface';
+import { Demo } from './entities/demo.entity';
+import { DemoRepo } from './demo.repository';
 
 @Injectable()
-export class DemoService {
-  create(createDemoDto: CreateDemoDto) {
-    return 'This action adds a new demo';
+export class DemoService implements IDemoService {
+  constructor(private repo: DemoRepo) {}
+
+  async findAll(): Promise<Demo[]> {
+    return await this.repo.getAll();
   }
 
-  findAll() {
-    return `This action returns all demo`;
+  async findOne(id: number): Promise<Demo | null> {
+    return await this.repo.getOne(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} demo`;
+  async create(demo: Create): Promise<Demo> {
+    return await this.repo.createOne(demo);
   }
 
-  update(id: number, updateDemoDto: UpdateDemoDto) {
-    return `This action updates a #${id} demo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} demo`;
+  async update(id: number, demo: Partial<Update>): Promise<Demo | null> {
+    return await this.repo.updateOne(id, demo);
   }
 }

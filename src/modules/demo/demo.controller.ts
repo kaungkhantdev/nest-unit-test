@@ -5,12 +5,12 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  // Delete,
 } from '@nestjs/common';
-import { DemoService } from './demo.service';
 import { CreateDemoDto } from './dto/create-demo.dto';
 import { UpdateDemoDto } from './dto/update-demo.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { DemoService } from './demo.service';
 
 @ApiTags('Demo module')
 @Controller('demo')
@@ -37,8 +37,8 @@ export class DemoController {
     return this.demoService.update(+id, updateDemoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.demoService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.demoService.remove(+id);
+  // }
 }

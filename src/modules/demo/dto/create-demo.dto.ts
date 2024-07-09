@@ -1,1 +1,4 @@
-export class CreateDemoDto {}
+export class CreateDemoDto {
+  name: string;
+  description: string;
+}

@@ -5,6 +5,6 @@ import { ConfigService } from '@nestjs/config';
 export class AppService {
   constructor(private configService: ConfigService) {}
   getHello(): string {
-    return this.configService.get<string>('database.name');
+    return 'Hello World!';
   }
 }
