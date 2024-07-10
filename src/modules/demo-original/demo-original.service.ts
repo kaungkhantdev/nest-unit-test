@@ -1,26 +1,57 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDemoOriginalDto } from './dto/create-demo-original.dto';
-import { UpdateDemoOriginalDto } from './dto/update-demo-original.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DemoOriginal } from './entities/demo-original.entity';
+import { Repository } from 'typeorm';
+import {
+  Create,
+  IDemoOriginalService,
+  Update,
+} from '@common/interfaces/services/demo-original-service.interface';
 
 @Injectable()
-export class DemoOriginalService {
-  create(createDemoOriginalDto: CreateDemoOriginalDto) {
-    return 'This action adds a new demoOriginal';
+export class DemoOriginalService implements IDemoOriginalService {
+  constructor(
+    @InjectRepository(DemoOriginal)
+    private readonly repo: Repository<DemoOriginal>,
+  ) {}
+
+  async create(data: Create): Promise<DemoOriginal> {
+    const dO = new DemoOriginal();
+    dO.name = data.name;
+    dO.description = data.description;
+    return await this.repo.save(dO);
   }
 
-  findAll() {
-    return `This action returns all demoOriginal`;
+  async findAll(): Promise<DemoOriginal[] | null> {
+    return await this.repo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} demoOriginal`;
+  async findOne(id: string): Promise<DemoOriginal | null> {
+    if (!id) return null;
+    return await this.repo.findOneBy({ id: +id });
   }
 
-  update(id: number, updateDemoOriginalDto: UpdateDemoOriginalDto) {
-    return `This action updates a #${id} demoOriginal`;
+  async update(
+    id: string,
+    data: Partial<Update>,
+  ): Promise<DemoOriginal | null> {
+    const demoOriginal = await this.repo.findOneBy({ id: +id });
+    if (!id || !demoOriginal) {
+      return null;
+    }
+
+    Object.assign(demoOriginal, data);
+    await this.repo.save(demoOriginal);
+
+    return this.repo.findOneBy({ id: +id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} demoOriginal`;
+  async remove(id: string): Promise<null> {
+    const cat = await this.repo.findOneBy({ id: +id });
+    if (!cat) {
+      return null;
+    }
+    await this.repo.remove(cat);
+    return null;
   }
 }

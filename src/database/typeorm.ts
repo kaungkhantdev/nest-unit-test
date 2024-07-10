@@ -1,3 +1,4 @@
+import { DemoOriginal } from '@modules/demo-original/entities/demo-original.entity';
 import { Demo } from '@modules/demo/entities/demo.entity';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -15,7 +16,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get('database.user'),
       password: this.configService.get('database.password'),
       database: this.configService.get('database.name'),
-      entities: [Demo],
+      entities: [Demo, DemoOriginal],
       synchronize: true,
     };
   }
